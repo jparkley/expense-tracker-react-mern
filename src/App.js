@@ -1,5 +1,6 @@
-import React, { useReducer } from "react"
+import React, { useEffect, useReducer } from "react"
 import ReactDOM from "react-dom"
+import Axios from "axios"
 
 import StateContext from "./context/StateContext"
 import DispatchContext from "./context/DispatchContext"
@@ -15,6 +16,19 @@ function App() {
     transactions: []
   }
   const [state, dispatch] = useReducer(appReducer, initialState)
+
+  useEffect(() => {
+    try {
+      async function fetchTransactions() {
+        const data = await Axios.get("/api/v1/transactions")
+        console.log("after call data: ", data)
+      }
+      fetchTransactions()
+    } catch (e) {
+      console.log(e)
+    }
+    return
+  }, [])
 
   return (
     <StateContext.Provider value={state}>
