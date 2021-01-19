@@ -1,1 +1,6 @@
 node_modules
+/server/node_modules
+/server/.env
+
+testExpress.js
+testServer.js
