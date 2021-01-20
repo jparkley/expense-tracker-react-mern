@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from "react"
-import DispatchContext from "../context/DispatchContext"
+import React, { useContext, useEffect } from "react"
 import { useImmerReducer } from "use-immer"
 import { CSSTransition } from "react-transition-group"
+import Axios from "axios"
+import DispatchContext from "../context/DispatchContext"
 
 function AddTransaction() {
   const appDispatch = useContext(DispatchContext)
@@ -57,8 +58,29 @@ function AddTransaction() {
 
   useEffect(() => {
     if (state.submitCount) {
-      appDispatch({ type: "ADD", value: { id: Math.floor(Math.random() * 10000000), text: state.text.value, amount: parseInt(state.amount.value) } })
+      const thisRequest = Axios.CancelToken.source()
+      async function createOne() {
+        try {
+          const response = await Axios.post("/api/v1/transactions", {
+            text: state.text.value,
+            amount: parseInt(state.amount.value)
+          })
+          const newTransaction = response.data.data
+          appDispatch({
+            type: "ADD",
+            value: {
+              _id: newTransaction._id,
+              text: newTransaction.text,
+              amount: newTransaction.amount
+            }
+          })
+        } catch (e) {
+          console.log(e)
+        }
+      }
+      createOne()
       dispatch({ type: "FIELDS_INITIALIZATION" })
+      return thisRequest.cancel()
     }
   }, [state.submitCount])
 
