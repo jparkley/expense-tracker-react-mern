@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer } from "react"
 import ReactDOM from "react-dom"
 import Axios from "axios"
+//import dotenv from "dotenv"
 
 import StateContext from "./context/StateContext"
 import DispatchContext from "./context/DispatchContext"
@@ -11,6 +12,10 @@ import IncomeExpenses from "./components/IncomeExpenses"
 import TransactionList from "./components/TransactionList"
 import AddTransaction from "./components/AddTransaction"
 
+// dotenv.config()
+// Axios.defaults.baseURL = process.env.BACKENDURL
+Axios.defaults.baseURL = "http://localhost:5000"
+
 function App() {
   const initialState = {
     transactions: []
@@ -20,8 +25,8 @@ function App() {
   useEffect(() => {
     try {
       async function fetchTransactions() {
-        const data = await Axios.get("/api/v1/transactions")
-        console.log("after call data: ", data)
+        const transactions = await Axios.get("/api/v1/transactions")
+        dispatch({ type: "FETCH", value: transactions.data })
       }
       fetchTransactions()
     } catch (e) {

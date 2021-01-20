@@ -1,14 +1,19 @@
 export default (state, action) => {
   switch (action.type) {
+    case "FETCH":
+      return {
+        ...state,
+        transactions: action.value
+      }
     case "ADD":
       return {
         ...state,
-        transactions: [action.value, ...state.transactions]
+        transactions: [...state.transactions, action.value]
       }
     case "DELETE":
       return {
         ...state,
-        transactions: state.transactions.filter(transaction => transaction.id !== action.value)
+        transactions: state.transactions.filter(transaction => transaction._id !== action.value)
       }
   }
 }

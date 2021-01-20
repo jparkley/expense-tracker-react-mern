@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
+import Axios from "axios"
 import DispatchContext from "../context/DispatchContext"
 import StateContext from "../context/StateContext"
 
@@ -7,10 +8,17 @@ function TransactionList() {
   const appDispatch = useContext(DispatchContext)
   const transactions = appState.transactions
 
-  function deleteHandler(id) {
+  async function deleteHandler(_id) {
     const areYouSure = window.confirm("Are you sure?")
     if (areYouSure) {
-      appDispatch({ type: "DELETE", value: id })
+      try {
+        const response = await Axios.delete(`/api/v1/transactions/${_id}`)
+        if (response.data == "SUCCESS") {
+          appDispatch({ type: "DELETE", value: _id })
+        }
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 
@@ -20,12 +28,12 @@ function TransactionList() {
       <ul className="list">
         {transactions.map(transaction => {
           return (
-            <li key={transaction.id} className={transaction.amount < 0 ? "minus" : "plus"}>
+            <li key={transaction._id} className={transaction.amount < 0 ? "minus" : "plus"}>
               {transaction.text}{" "}
               <span>
                 {transaction.amount < 0 ? "-" : ""}${Math.abs(transaction.amount)}
               </span>
-              <a className="delete-btn" onClick={() => deleteHandler(transaction.id)}>
+              <a className="delete-btn" onClick={() => deleteHandler(transaction._id)}>
                 x
               </a>
             </li>
