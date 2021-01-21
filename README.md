@@ -3,7 +3,7 @@
 ## Key Features
 * React
 * Axio API requests
-* Organized Javascript/Node.js modules
+* Organized Javascript/Node.js modules in [back-end](https://github.com/jparkley/expense-tracker-react-mern-backend)
 * Express Server
 * MongoDB cloud
 * Front-end live registration
@@ -24,7 +24,7 @@
 ## Installation / Setup
 
 - <a href="https://github.com/jparkley/expense-tracker-react-mern/blob/master/package.json">package.json</a>
-- Need cloud that supports MongoDB
+- Need MongoDB cloud
 
 ## Back-end source
 [https://github.com/jparkley/expense-tracker-react-mern-backend](https://github.com/jparkley/expense-tracker-react-mern-backend)
