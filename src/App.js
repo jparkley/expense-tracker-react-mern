@@ -11,6 +11,7 @@ import Balance from "./components/Balance"
 import IncomeExpenses from "./components/IncomeExpenses"
 import TransactionList from "./components/TransactionList"
 import AddTransaction from "./components/AddTransaction"
+import LoadingDots from "./components/LoadingDots"
 
 // dotenv.config() // receives this from webpack build
 Axios.defaults.baseURL = process.env.BACKENDURL || "https://expense-tracker-react-mern.herokuapp.com"
@@ -18,7 +19,8 @@ console.log("BaseURL: ", Axios.defaults.baseURL)
 
 function App() {
   const initialState = {
-    transactions: []
+    transactions: [],
+    loading: true
   }
   const [state, dispatch] = useReducer(appReducer, initialState)
 
@@ -40,6 +42,7 @@ function App() {
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
         <Header />
+        {state.loading && <LoadingDots />}
         <div className="container">
           <Balance />
           <IncomeExpenses />

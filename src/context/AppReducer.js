@@ -3,6 +3,7 @@ export default (state, action) => {
     case "FETCH":
       return {
         ...state,
+        loading: false,
         transactions: action.value
       }
     case "ADD":
