@@ -12,9 +12,8 @@ import IncomeExpenses from "./components/IncomeExpenses"
 import TransactionList from "./components/TransactionList"
 import AddTransaction from "./components/AddTransaction"
 
-// dotenv.config()
-// Axios.defaults.baseURL = process.env.BACKENDURL
-Axios.defaults.baseURL = "http://localhost:5000"
+// dotenv.config() // receives this from webpack build
+Axios.defaults.baseURL = process.env.BACKENDURL || "https://expense-tracker-react-mern.herokuapp.com"
 
 function App() {
   const initialState = {
