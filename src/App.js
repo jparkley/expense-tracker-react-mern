@@ -14,6 +14,7 @@ import AddTransaction from "./components/AddTransaction"
 
 // dotenv.config() // receives this from webpack build
 Axios.defaults.baseURL = process.env.BACKENDURL || "https://expense-tracker-react-mern.herokuapp.com"
+console.log("BaseURL: ", Axios.defaults.baseURL)
 
 function App() {
   const initialState = {
@@ -25,6 +26,7 @@ function App() {
     try {
       async function fetchTransactions() {
         const transactions = await Axios.get("/api/v1/transactions")
+        console.log(transactions)
         dispatch({ type: "FETCH", value: transactions.data })
       }
       fetchTransactions()
