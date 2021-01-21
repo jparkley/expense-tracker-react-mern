@@ -1,20 +1,37 @@
+const currentTask = process.env.npm_lifecycle_event
+console.log("task: ", currentTask)
 const path = require("path")
+const Dotenv = require("dotenv-webpack")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const HtmlWebpackHarddiskPlugin = require("html-webpack-harddisk-plugin")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const fse = require("fs-extra")
 
-module.exports = {
+class RunAfterCompile {
+  apply(compiler) {
+    compiler.hooks.done.tap("Copy files", function () {
+      fse.copySync("./src/App.css", "./dist/App.css")
+    })
+  }
+}
+
+config = {
   entry: "./src/App.js",
   output: {
     publicPath: "/",
     path: path.resolve(__dirname, "src"),
     filename: "bundled.js"
   },
+  plugins: [
+    new Dotenv(),
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      template: "src/index-template.html",
+      alwaysWriteToDisk: true
+    }),
+    new HtmlWebpackHarddiskPlugin()
+  ],
   mode: "development",
-  devtool: "source-map",
-  devServer: {
-    port: 3000,
-    contentBase: path.join(__dirname, "src"),
-    hot: true,
-    historyApiFallback: { index: "index.html" }
-  },
   module: {
     rules: [
       {
@@ -30,3 +47,26 @@ module.exports = {
     ]
   }
 }
+
+if (currentTask == "webpackDev" || currentTask == "dev") {
+  config.devtool = "source-map"
+  config.devServer = {
+    port: 3000,
+    contentBase: path.join(__dirname, "src"),
+    hot: true,
+    historyApiFallback: { index: "index.html" }
+  }
+}
+
+if (currentTask == "webpackBuild") {
+  config.plugins.push(new CleanWebpackPlugin(), new RunAfterCompile())
+  config.mode = "production"
+  config.output = {
+    publicPath: "/",
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].[chunkhash].js",
+    chunkFilename: "[name].[chunkhash].js"
+  }
+}
+
+module.exports = config
